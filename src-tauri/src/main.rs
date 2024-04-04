@@ -1,10 +1,15 @@
 use serde::Deserialize;
-use std::{env, fs, io};
+use std::{env, fs, io, path::Path};
 
 #[derive(Debug, Deserialize)]
 struct Message {
     text: String,
     vgs: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct MessagesWrapper {
+    messages: Messages,
 }
 
 #[derive(Debug, Deserialize)]
@@ -22,15 +27,16 @@ fn main() {
     println!("Current directory: {:?}", current_dir);
 
     // Construct the path to the JSON file relative to the current directory
-    let json_file_path = current_dir.join("/json").join("messages.json");
+    let json_file_path = Path::new("/Users/oceon/Github/vgs-me/src-tauri/src/json/messages.json");
     println!("JSON file path: {:?}", json_file_path);
 
     // Read JSON data from file
-    let json_data = fs::read_to_string(&json_file_path)
+    let json_data = fs::read_to_string(json_file_path)
         .expect("Failed to read JSON file");
 
     // Deserialize JSON data into Messages struct
-    let messages: Messages = serde_json::from_str(&json_data).expect("Failed to deserialize JSON data");
+    let messages_wrapper: MessagesWrapper = serde_json::from_str(&json_data).expect("Failed to deserialize JSON data");
+    let messages = messages_wrapper.messages;
 
     // Prompt the user to input a VGS code
     println!("Enter VGS code:");
