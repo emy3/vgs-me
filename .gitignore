@@ -71,6 +71,7 @@ TODO.md
 
 # rust compiled folders
 target
+.metals/*
 
 # lock for libs
 #/Cargo.lock Committed to prevent msrv checks from failing
