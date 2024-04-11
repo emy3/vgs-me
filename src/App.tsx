@@ -1,47 +1,58 @@
-import React, { useState } from "react";
-import { invoke } from "@tauri-apps/api/tauri";
-import "./App.css";
+// app.tsx
+
+import React, { useEffect, useState } from 'react';
+
+interface Message {
+    text: string;
+    vgs: string;
+}
+
+interface Messages {
+    attack: Message[];
+    defend: Message[];
+}
 
 const App: React.FC = () => {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+    const [messages, setMessages] = useState<Messages | null>(null);
 
-  async function greet() {
-    try {
-      const response = await invoke("greet", { name });
-      setGreetMsg(response as string);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/api/get_messages'); // Update the fetch URL to match your backend endpoint
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const data = await response.json();
+                setMessages(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
-  return (
-    <div className="container">
-      <h1>Welcome to VGS Me</h1>
+        fetchData();
+    }, []);
 
-      {/* TODO:
-          - refactor to pick random text from JSON
-      */}
-      <p>You rock!</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Submit</button>
-      </form>
-
-      <p>{greetMsg}</p>
-    </div>
-  );
-}
+    return (
+        <div>
+            <h1>Messages</h1>
+            {messages && (
+                <div>
+                    <h2>Attack Messages</h2>
+                    <ul>
+                        {messages.attack.map((message, index) => (
+                            <li key={index}>{message.text}</li>
+                        ))}
+                    </ul>
+                    <h2>Defend Messages</h2>
+                    <ul>
+                        {messages.defend.map((message, index) => (
+                            <li key={index}>{message.text}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
+};
 
 export default App;

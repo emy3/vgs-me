@@ -1,72 +1,47 @@
-use serde::Deserialize;
-use std::{env, fs, io, path::Path};
+use serde::{Deserialize, Serialize};
+use std::env;
+use std::fs::File;
+use std::io::Read;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
+struct Messages {
+    attack: Vec<Message>,
+    defend: Vec<Message>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 struct Message {
     text: String,
     vgs: String,
 }
 
-#[derive(Debug, Deserialize)]
-struct MessagesWrapper {
-    messages: Messages,
-}
-
-#[derive(Debug, Deserialize)]
-struct Messages {
-    attack: Vec<Message>,
-    defend: Vec<Message>,
-    // Add more categories as needed
-}
-
 fn main() {
-    // Get the current directory
-    let current_dir = env::current_dir().expect("Failed to get current directory");
+    if let Ok(current_dir) = env::current_dir() {
+        eprintln!("Current working directory: {:?}", current_dir);
+    } else {
+        eprintln!("Failed to get current working directory");
+    }
+    // Read the JSON file
+    let file_path = "/Users/oceon/Github/vgs-me/src-tauri/src/json/messages.json";
+    let mut file = File::open(file_path).expect("Failed to open file");
+    let mut contents = String::new();
+    file.read_to_string(&mut contents).expect("Failed to read file");
 
-    // Print the current directory for debugging purposes
-    println!("Current directory: {:?}", current_dir);
-
-    // Construct the path to the JSON file relative to the current directory
-    let json_file_path = Path::new("/Users/oceon/Github/vgs-me/src-tauri/src/json/messages.json");
-    println!("JSON file path: {:?}", json_file_path);
-
-    // Read JSON data from file
-    let json_data = fs::read_to_string(json_file_path)
-        .expect("Failed to read JSON file");
-
-    // Deserialize JSON data into Messages struct
-    let messages_wrapper: MessagesWrapper = serde_json::from_str(&json_data).expect("Failed to deserialize JSON data");
-    let messages = messages_wrapper.messages;
-
-    // Prompt the user to input a VGS code
-    println!("Enter VGS code:");
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).expect("Failed to read input");
-
-    // Trim the input to remove whitespace and newlines
-    let input = input.trim();
-
-    // Check if the input matches any VGS code in the messages
-    let mut found = false;
-    for message in &messages.attack {
-        if input == message.vgs {
-            println!("Correct: {}", message.text);
-            found = true;
-            break;
+    // Parse the JSON content with error handling
+    let messages: Messages = match serde_json::from_str(&contents) {
+        Ok(messages) => messages,
+        Err(error) => {
+            eprintln!("Failed to parse JSON: {}", error);
+            return;
         }
-    }
+    };
 
-    if !found {
-        for message in &messages.defend {
-            if input == message.vgs {
-                println!("Correct: {}", message.text);
-                found = true;
-                break;
-            }
-        }
-    }
+    // Access the messages
+    let attack_messages = &messages.attack;
+    let defend_messages = &messages.defend;
 
-    if !found {
-        println!("Incorrect VGS code");
-    }
+    // Do whatever you want with the messages
+    println!("Attack messages: {:?}", attack_messages);
+    println!("Defend messages: {:?}", defend_messages);
 }
+

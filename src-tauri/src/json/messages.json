@@ -1,60 +1,13 @@
 {
-    "messages": {
-        "attack": [
-            {
-                "text": "Attack left lane!",
-                "vgs": "va1"
-            },
-            {
-                "text": "Attack middle lane!",
-                "vgs": "va2"
-            },
-            {
-                "text": "Attack right lane!",
-                "vgs": "va3"
-            },
-            {
-                "text": "Attack!",
-                "vgs": "aaa"
-            },
-            {
-                "text": "Attack Fire Giant!" ,
-                "vgs": "vaf"
-            },
-            {
-                "text": "Attack the Gold Fury!" ,
-                "vgs": "vag"
-            },
-            {
-                "text": "Attack the Titan!"  ,
-                "vgs": "vam"
-            },
-            {
-                "text": "Attack left tower/phoenix " ,
-                "vgs": "vat"
-            },
-            {
-                "text": "Attack middle tower/phoenix " ,
-                "vgs": "vat2"
-            },
-            {
-                "text": "Attack right tower/phoenix " ,
-                "vgs": "vat3"
-            }
-        ],
-        "defend": [
-            {
-                "text": "Defend left lane!",
-                "vgs": "vd1"
-            },
-            {
-                "text": "Defend middle lane!",
-                "vgs": "vd2"
-            },
-            {
-                "text": "Defend right lane!",
-                "vgs": "vd3"
-            }
-        ]
-    }
+    "attack": [
+        { "text": "Attack left lane!", "vgs": "va1" },
+        { "text": "Attack middle lane!", "vgs": "va2" },
+        { "text": "Attack right lane!", "vgs": "va3" },
+        { "text": "Attack!", "vgs": "aaa" }
+    ],
+    "defend": [
+        { "text": "Defend left lane!", "vgs": "vd1" },
+        { "text": "Defend middle lane!", "vgs": "vd2" },
+        { "text": "Defend right lane!", "vgs": "vd3" }
+    ]
 }
